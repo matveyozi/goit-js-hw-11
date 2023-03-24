@@ -1,0 +1,2 @@
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Courier New,Courier,monospace,sans-serif}.container{height:50px;background:linear-gradient(#6fc 0%,#66f 100%);justify-content:center;align-items:center;display:flex}#form{width:500px;flex-direction:row;justify-content:center;align-items:center;gap:20px;display:flex}.search{width:300px;height:30px;font-size:16px;display:block}.button{width:25px;height:30px;font-size:16px;display:block}
+/*# sourceMappingURL=index.b384e28b.css.map */
