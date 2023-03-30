@@ -10,6 +10,14 @@ const loadBtn = document.querySelector('.load-more');
 let searchState = '';
 let pageState = 1;
 let total = 0;
+const { height: cardHeight } = document
+	.querySelector(".gallery")
+	.firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+	top: cardHeight * 2,
+	behavior: "smooth",
+});
 form.addEventListener('submit', async (e) => {
 	e.preventDefault();
 	const { searchQuery } = e.currentTarget.elements;
@@ -49,7 +57,7 @@ async function fetchCollection(search, page) {
 	renderList(db.hits)
 	const finalPage = Math.ceil(+(db.total) / 10);
 	updateLoadButton(page, finalPage)
-	
+
 
 
 }
