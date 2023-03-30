@@ -16,6 +16,7 @@ form.addEventListener('submit', async (e) => {
 	const search = searchQuery.value;
 	if (search == '') {
 		onError()
+		return;
 	}
 	if (search !== searchState || total) {
 		searchState = search;
