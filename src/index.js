@@ -10,14 +10,14 @@ const loadBtn = document.querySelector('.load-more');
 let searchState = '';
 let pageState = 1;
 let total = 0;
-const { height: cardHeight } = document
-	.querySelector(".gallery")
-	.firstElementChild.getBoundingClientRect();
+// const { height: cardHeight } = document
+// 	.querySelector(".gallery")
+// 	.firstElementChild.getBoundingClientRect();
 
-window.scrollBy({
-	top: cardHeight * 2,
-	behavior: "smooth",
-});
+// window.scrollBy({
+// 	top: cardHeight * 2,
+// 	behavior: "smooth",
+// });
 form.addEventListener('submit', async (e) => {
 	e.preventDefault();
 	const { searchQuery } = e.currentTarget.elements;
