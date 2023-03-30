@@ -6,61 +6,94 @@ import { getData } from './js/fetch.js'
 
 const form = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
+const loadBtn = document.querySelector('.load-more');
 let searchState = '';
 let pageState = 1;
+let total = 0;
 form.addEventListener('submit', async (e) => {
 	e.preventDefault();
 	const { searchQuery } = e.currentTarget.elements;
 	const search = searchQuery.value;
-	const db = await getData(search, 1);
-	if (db.hits.length == 0) {
+	if (search == '') {
 		onError()
 	}
-	if (search !== searchState) {
+	if (search !== searchState || total) {
 		searchState = search;
 		pageState = 1;
 		resetList(gallery);
-		await renderList(gallery, db.hits);
+		await fetchCollection(search, 1)
+		onSuccess(total)
 	}
 });
-async function  fetchCollection(search, page) {
+
+loadBtn.addEventListener('click', () => {
+	const page = document.querySelector('.load-more').dataset.page;
+	const final = document.querySelector('.load-more').dataset.final;
+	const search = document.querySelector('input').value;
+	if (final !== page) {
+		fetchCollection(searchState, page);
+	} else {
+		loadBtn.style.display = 'none';
+		Notify.info('The end')
+	}
+})
+
+async function fetchCollection(search, page) {
+	const db = await getData(search, page);
+	if (db.hits.length == 0 || search) {
+
+	}
+
+	total = db.total;
+	renderList(db.hits)
+	const finalPage = Math.ceil(+(db.total) / 10);
+	updateLoadButton(page, finalPage)
 	
+
+
 }
 
 
-function renderList(parentSelector, collection) {
+function renderList(collection) {
 	const gallaryItem = collection.map(element => {
-		return `<div class="photo-card">
+		return `<a href="${element.largeImageURL}" class="photo-card">
   <img src="${element.webformatURL}" alt="${element.tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
-      <b>Likes ${element.likes}</b>
+      <b>Likes</b>
+	  <span>${element.likes}</span>
     </p>
     <p class="info-item">
-      <b>Views ${element.views}</b>
+      <b>Views</b>
+	  <span>${element.views}</span>
     </p>
     <p class="info-item">
-      <b>Comments ${element.comments}</b>
+      <b>Comments</b>
+	  <span>${element.comments}</span>
     </p>
     <p class="info-item">
-      <b>Downloads ${element.downloads}</b>
+      <b>Downloads</b>
+	  <span>${element.downloads}</span>
     </p>
   </div>
-</div>`
+</a>`
 	}).join('');
 
-	parentSelector.insertAdjacentHTML('beforeend',gallaryItem);
+	gallery.insertAdjacentHTML('beforeend', gallaryItem);
+	const lightbox = new SimpleLightbox('.gallery a', {
+		captionDelay: 250
+	});
 }
 
 function resetList(selector) {
 	selector.innerHTML = '';
 }
 
-const updateLoadButton = (currentPage, finalPage) => {
-	const btn = document.querySelector('.load');
-	btn.style.display = 'block';
-	btn.dataset.page = Number(currentPage) + 1;
-	btn.dataset.final = Number(finalPage) + 1;
+function updateLoadButton(currentPage, finalPage) {
+
+	loadBtn.style.display = 'block';
+	loadBtn.dataset.page = Number(currentPage) + 1;
+	loadBtn.dataset.final = Number(finalPage) + 1;
 };
 
 
@@ -70,5 +103,5 @@ function onSuccess(totalHits) {
 
 function onError() {
 	Notify.failure(`Sorry, there are no images matching your search query.Please try again.`);
-	
+
 }
